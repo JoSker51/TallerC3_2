@@ -1,6 +1,6 @@
 # Combinando Modelos · Hard vs Soft Voting — Yomi Level
 
-[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JoSker51/TallerVoting/blob/main/Taller_Voting_Yomi_Level.ipynb)
+[![Abrir en Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/JoSker51/TallerC3_2/blob/main/Taller_Voting_Yomi_Level.ipynb)
 
 **Aprendizaje Supervisado · Universidad Sergio Arboleda**
 José Santiago González · Oscar Mateo Arrubla · Leonardo Diasgranados · Docente: Hernán Cruz Bueno
