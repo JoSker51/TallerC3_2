@@ -11,7 +11,7 @@ md(T.INTRO)
 
 code(r'''
 # ============================================================
-# 📦 Librerías
+# Librerías
 # ============================================================
 import os, itertools, warnings
 import numpy as np
@@ -35,7 +35,7 @@ ORDEN = ["Fácil", "Intermedio", "Difícil"]
 md(T.FASE1)
 code(r'''
 # ============================================================
-# 📂 Fase 1 · Cargar y preparar el dataset (mismo preprocesamiento del proyecto)
+# Fase 1 · Cargar y preparar el dataset (mismo preprocesamiento del proyecto)
 # ============================================================
 # El CSV se lee junto al notebook; en Colab, si no se subió, se descarga del repositorio
 ruta = ('moe_db_anilist_dataset.csv' if os.path.exists('moe_db_anilist_dataset.csv')
@@ -85,7 +85,7 @@ print("\nBalance de clases:"); print(y.value_counts().reindex(ORDEN).to_string()
 ''')
 
 code(r'''
-# 📊 Distribución de la dificultad y balance de clases
+# Distribución de la dificultad y balance de clases
 fig, ax = plt.subplots(1, 2, figsize=(12, 3.8))
 sns.histplot(df['Overall Difficulty (1-100)'], bins=60, color='gray', ax=ax[0])
 for c in cortes[1:3]:
@@ -103,7 +103,7 @@ plt.tight_layout(); plt.savefig('figuras/1_dataset.png'); plt.show()
 md(T.FASE2)
 code(r'''
 # ============================================================
-# 🤖 Fase 2 · Modelos base: los mismos parámetros que encontramos en cada taller
+# Fase 2 · Modelos base: los mismos parámetros que encontramos en cada taller
 # ============================================================
 # KNN y SVM necesitan escalado -> van dentro de un Pipeline con StandardScaler.
 # Random Forest no lo necesita.
@@ -142,7 +142,7 @@ pd.DataFrame(tabla).T.round(3)
 ''')
 
 code(r'''
-# 🔲 Matrices de confusión de los modelos base
+# Matrices de confusión de los modelos base
 fig, axes = plt.subplots(1, 3, figsize=(15, 4))
 for ax, nombre in zip(axes, modelos_base):
     cm = confusion_matrix(y_test, pred[nombre], labels=ORDEN)
@@ -155,7 +155,7 @@ plt.tight_layout(); plt.savefig('figuras/2_cm_base.png'); plt.show()
 md(T.FASE3)
 code(r'''
 # ============================================================
-# 🗳️ Fase 3 · VotingClassifier: Hard y Soft con los 3 modelos base
+# Fase 3 · VotingClassifier: Hard y Soft con los 3 modelos base
 # ============================================================
 estimadores = list(modelos_base.items())
 
@@ -175,12 +175,12 @@ resultados.round(3)
 ''')
 
 code(r'''
-# 📋 Reporte por clase del mejor ensemble (Soft)
+# Reporte por clase del mejor ensemble (Soft)
 print(classification_report(y_test, pred['Voting Soft'], labels=ORDEN, digits=3))
 ''')
 
 code(r'''
-# 🔍 ¿Qué tanto coinciden los modelos entre sí? (la diversidad es lo que hace funcionar el voting)
+# ¿Qué tanto coinciden los modelos entre sí? (la diversidad es lo que hace funcionar el voting)
 votos = pd.DataFrame({k: pred[k] for k in modelos_base}, index=X_test.index)
 print(f"Los 3 modelos dicen lo mismo en el {(votos.nunique(axis=1) == 1).mean():.1%} de los títulos")
 print(f"Los 3 dicen algo distinto (empate) en el {(votos.nunique(axis=1) == 3).mean():.1%}")
@@ -192,7 +192,7 @@ for ens in ['Voting Hard', 'Voting Soft']:
 ''')
 
 code(r'''
-# 🎬 La decisión del ensemble en casos reales: títulos donde los modelos no se ponen de acuerdo
+# La decisión del ensemble en casos reales: títulos donde los modelos no se ponen de acuerdo
 clases = list(voting_soft.classes_)
 info = df.loc[X_test.index, ['Anime Title', 'entry_type', 'start_year', 'Overall Difficulty (1-100)']]
 filas = []
@@ -217,7 +217,7 @@ distintos.head(8)
 md(T.FASE4)
 code(r'''
 # ============================================================
-# 📈 Fase 4 · Comparación de métricas entre modelos base y ensembles
+# Fase 4 · Comparación de métricas entre modelos base y ensembles
 # ============================================================
 orden_m = ['KNN', 'SVM', 'Random Forest', 'Voting Hard', 'Voting Soft']
 colores = ['#9AA3AD', '#7C93B0', '#2B4A6F', '#F2A900', '#D9480F']
@@ -235,7 +235,7 @@ plt.tight_layout(); plt.savefig('figuras/3_comparacion.png'); plt.show()
 ''')
 
 code(r'''
-# 🔲 Matrices de confusión: Hard vs Soft
+# Matrices de confusión: Hard vs Soft
 fig, axes = plt.subplots(1, 2, figsize=(11, 4))
 for ax, nombre in zip(axes, ['Voting Hard', 'Voting Soft']):
     cm = confusion_matrix(y_test, pred[nombre], labels=ORDEN)
@@ -246,7 +246,7 @@ plt.tight_layout(); plt.savefig('figuras/4_cm_voting.png'); plt.show()
 ''')
 
 code(r'''
-# ➕➖ ¿Cómo cambia el desempeño al quitar o agregar modelos del ensemble?
+# ¿Cómo cambia el desempeño al quitar o agregar modelos del ensemble?
 # Combinaciones de 2 y 3 modelos, en Hard y en Soft
 ablacion = []
 for r in (1, 2, 3):
@@ -264,7 +264,7 @@ ablacion.round(4)
 ''')
 
 code(r'''
-# 📊 Gráfica de la ablación
+# Gráfica de la ablación
 fig, ax = plt.subplots(figsize=(11, 5))
 ind = ablacion[ablacion['n'] == 1].set_index('Modelos')['F1-macro']
 comb = ablacion[ablacion['n'] > 1].pivot(index='Modelos', columns='Voting', values='F1-macro')
@@ -287,7 +287,7 @@ plt.tight_layout(); plt.savefig('figuras/5_ablacion.png'); plt.show()
 md(T.DESBALANCE_INTRO)
 code(r'''
 # ============================================================
-# ⚖️ Experimento extra: problema desbalanceado "¿Es Difícil? (sí/no)" -> 1 de cada 3 es positivo
+# Experimento extra: problema desbalanceado "¿Es Difícil? (sí/no)" -> 1 de cada 3 es positivo
 # ============================================================
 ytr_b, yte_b = (y_train == 'Difícil').astype(int), (y_test == 'Difícil').astype(int)
 print(f"Proporción de títulos difíciles en test: {yte_b.mean():.1%}")
@@ -315,7 +315,7 @@ tabla_bin.round(3)
 ''')
 
 code(r'''
-# 🎚️ Soft Voting permite mover el umbral: ¿cuántos títulos difíciles detecta si somos más exigentes?
+# Soft Voting permite mover el umbral: ¿cuántos títulos difíciles detecta si somos más exigentes?
 umbrales = np.arange(0.20, 0.61, 0.05)
 curva = pd.DataFrame([fila_bin(yte_b, (bin_proba['Voting Soft'] >= u).astype(int)) | {'Umbral': round(u, 2)}
                       for u in umbrales]).set_index('Umbral')
